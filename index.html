@@ -17,9 +17,9 @@
         <section class="code-block">
             <div class="code-block-header">
                 <h2>乱数生成プログラム (Batch)</h2>
-                <button id="copy-button">コピー</button>
+                <button class="copy-button">コピー</button>
             </div>
-            <pre><code id="code-to-copy">@echo off
+            <pre><code class="code-to-copy">@echo off
 cls
 echo Random Creater v1.21
 title Random Create
@@ -63,27 +63,71 @@ echo.
 pause > NUL
 goto StartNLog</code></pre>
         </section>
+        <section class="code-block">
+            <div class="code-block-header">
+                <h2>ルーレット (Batch)</h2>
+                <button class="copy-button">コピー</button>
+            </div>
+            <pre><code class="code-to-copy">@echo off
+chcp 65001
+cls
+goto setup1
+
+:setup1
+echo 参加者数を教えてください。
+echo.
+set /p "Sankasha=Count: "
+
+for /l %%i in (1, 1, %Sankasha%) do (
+    set /p "SankaName%%i=参加者%%i人目: "
+)
+
+echo.
+echo 確認が取れました。ルーレットを開始するには何かキーを押してください...
+pause > NUL
+goto ruretto
+
+:ruretto
+cls
+setlocal EnableDelayedExpansion
+set /a rurettokekka = %RANDOM% %% %Sankasha%+1
+echo 抽選結果発表！
+echo.
+timeout /t 1 >nul
+echo 当選者は...
+echo.
+timeout /t 3 >nul
+echo !SankaName%rurettokekka%!だ！おめでとう！
+echo.
+echo 何かキーを押すと閉じれます。
+pause > NUL
+exit</code></pre>
+        </section>
     </main>
     <script>
-        const copyButton = document.getElementById('copy-button');
-        const codeToCopy = document.getElementById('code-to-copy');
+        document.querySelectorAll('.code-block').forEach(block => {
+            const copyButton = block.querySelector('.copy-button');
+            const codeToCopy = block.querySelector('.code-to-copy');
 
-        copyButton.addEventListener('click', () => {
-            const codeText = codeToCopy.innerText;
-            navigator.clipboard.writeText(codeText).then(() => {
-                copyButton.textContent = 'コピー完了!';
-                copyButton.disabled = true;
-                setTimeout(() => {
-                    copyButton.textContent = 'コピー';
-                    copyButton.disabled = false;
-                }, 2000);
-            }).catch(err => {
-                console.error('コピーに失敗しました', err);
-                copyButton.textContent = '失敗';
-                 setTimeout(() => {
-                    copyButton.textContent = 'コピー';
-                }, 2000);
-            });
+            if (copyButton && codeToCopy) {
+                copyButton.addEventListener('click', () => {
+                    const codeText = codeToCopy.innerText;
+                    navigator.clipboard.writeText(codeText).then(() => {
+                        copyButton.textContent = 'コピー完了!';
+                        copyButton.disabled = true;
+                        setTimeout(() => {
+                            copyButton.textContent = 'コピー';
+                            copyButton.disabled = false;
+                        }, 2000);
+                    }).catch(err => {
+                        console.error('コピーに失敗しました', err);
+                        copyButton.textContent = '失敗';
+                        setTimeout(() => {
+                            copyButton.textContent = 'コピー';
+                        }, 2000);
+                    });
+                });
+            }
         });
     </script>
 </body>
