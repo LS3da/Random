@@ -103,6 +103,25 @@ echo 何かキーを押すと閉じれます。
 pause > NUL
 exit</code></pre>
         </section>
+        <section class="code-block">
+            <div class="code-block-header">
+                <h3>SkyCleanUp (Batch)</h3>
+                <button class="copy-button">コピー</button>
+            </div>
+            <pre><code class="code-to-copy">@echo off
+echo This is SkyCleanUp Process. As long as it's open, the process will continue to run.
+echo.
+echo ===========================
+echo.
+goto start
+:start
+taskkill /im SclsToolBar.exe /f
+taskkill /im lanusr.exe /f
+taskkill /im bcGC.exe /f
+timeout /t 15 > nul
+goto start
+exit</code></pre>
+        </section>
     </main>
     <script>
         document.querySelectorAll('.code-block').forEach(block => {
