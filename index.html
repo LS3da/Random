@@ -105,7 +105,7 @@ exit</code></pre>
         </section>
         <section class="code-block">
             <div class="code-block-header">
-                <h3>SkyCleanUp (Batch)</h3>
+                <h3>SkyCleanUp (Batch+)</h3>
                 <button class="copy-button">コピー</button>
             </div>
             <pre><code class="code-to-copy">@echo off
@@ -122,7 +122,9 @@ timeout /t 15 > nul
 goto start
 exit</code></pre>
         </section>
+
     </main>
+    <p>「Batch+」が付いているプログラムは、Windows+Rで「shell:startup」で実行し、その中に入れることで起動時に実行させることができます。</p>
     <script>
         document.querySelectorAll('.code-block').forEach(block => {
             const copyButton = block.querySelector('.copy-button');
