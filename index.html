@@ -115,9 +115,9 @@ echo ===========================
 echo.
 goto start
 :start
-taskkill /im SclsToolBar.exe /f
-taskkill /im lanusr.exe /f
-taskkill /im bcGC.exe /f
+taskkill /im SclsToolBar.exe /f > NUL 2>&1
+taskkill /im lanusr.exe /f > NUL 2>&1
+taskkill /im bcGC.exe /f > NUL 2>&1
 timeout /t 15 > nul
 goto start
 exit</code></pre>
