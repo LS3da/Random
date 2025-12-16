@@ -52,7 +52,15 @@ main {
 
 h2 {
     font-weight: 700;
-    color: #61afef; /* A nice blue accent */
+    color: #61afef;
+    margin: 0;
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+h3 {
+    font-weight: 700;
+    color: #61afef;
     margin: 0;
     border-bottom: none;
     padding-bottom: 0;
