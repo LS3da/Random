@@ -69,6 +69,90 @@ goto StartNLog</code></pre>
                 <button class="copy-button">コピー</button>
             </div>
             <pre><code class="code-to-copy">@echo off
+chcp 65001 >nul
+cls
+
+:: ==============================================
+:: Setting Section
+:: ==============================================
+set "APP_NAME=RouletteTool"
+set "EXE_NAME=roulette.bat"
+set "SHORTCUT_NAME=ルーレット.lnk"
+
+set "TARGET_DIR=%APPDATA%\%APP_NAME%"
+set "TARGET_PATH=%TARGET_DIR%\%EXE_NAME%"
+set "SHORTCUT_PATH=%USERPROFILE%\Desktop\%SHORTCUT_NAME%"
+
+:: ==============================================
+:: Installed Check
+:: ==============================================
+if exist "%TARGET_PATH%" goto UNINSTALL_FLOW
+
+:INSTALL_FLOW
+echo ----------------------------------------------
+echo Roulette Installer
+echo ----------------------------------------------
+echo.
+echo ルーレットをインストールする場合は何かキーを押してください。
+echo.
+pause > NUL
+echo Roulette Install Starting...
+
+echo.
+echo [1/3] Folder Creating...
+if not exist "%TARGET_DIR%" mkdir "%TARGET_DIR%"
+
+echo [2/3] Generating main file...
+powershell -Command "$raw = Get-Content '%~f0' -Encoding UTF8; $skip = 0; foreach($i in 0..($raw.Length-1)){ if($raw[$i] -eq ':: --- PAYLOAD_START ---'){ $skip = $i + 1; break } }; $content = $raw[$skip..($raw.Length-1)] -join \"`r`n\"; [System.IO.File]::WriteAllLines('%TARGET_PATH%', $content)"
+
+echo [3/3] Creating Desktop Shortcut...
+powershell -Command "$s=(New-Object -COM WScript.Shell).CreateShortcut('%SHORTCUT_PATH%');$s.TargetPath='%TARGET_PATH%';$s.Save()"
+
+echo.
+echo ----------------------------------------------
+echo Install Completed!
+echo ----------------------------------------------
+echo.
+echo デスクトップの「%SHORTCUT_NAME%」から起動してください。
+echo.
+pause
+exit
+
+:UNINSTALL_FLOW
+echo ----------------------------------------------
+echo Roulette Uninstaller
+echo ----------------------------------------------
+echo.
+echo ルーレットのアンインストーラーへようこそ！
+echo.
+set /p "choice=アンインストールしますか？ (y/n): "
+
+if /i not "%choice%"=="y" (
+    echo.
+    echo 削除をキャンセルしました。ルーレットはまだそこにあります。
+    echo.
+    pause
+    exit
+)
+
+echo.
+echo [1/2] Remove desktop shortcut...
+if exist "%SHORTCUT_PATH%" del /f /q "%SHORTCUT_PATH%"
+
+echo [2/2] Deleting device and folder...
+if exist "%TARGET_PATH%" del /f /q "%TARGET_PATH%"
+rd "%TARGET_DIR%" 2>nul
+
+echo.
+echo ----------------------------------------------
+echo Delete Completed.
+echo ----------------------------------------------
+echo.
+pause
+exit
+
+:: --- PAYLOAD_START ---
+@echo off
 chcp 65001
 cls
 goto setup1
@@ -109,6 +193,88 @@ exit</code></pre>
                 <button class="copy-button">コピー</button>
             </div>
             <pre><code class="code-to-copy">@echo off
+chcp 65001 >nul
+cls
+
+:: ==============================================
+:: Settings
+:: ==============================================
+set "APP_NAME=SkyCleanUpTool"
+set "EXE_NAME=SkyCleanUp.bat"
+set "SHORTCUT_NAME=SkyCleanUp.lnk"
+
+:: 1. Location of the device (directly under AppData)
+set "TARGET_DIR=%APPDATA%\%APP_NAME%"
+set "TARGET_PATH=%TARGET_DIR%\%EXE_NAME%"
+
+:: 2. Shortcut location (Desktop and Startup)
+set "SHORTCUT_DESKTOP=%USERPROFILE%\Desktop\%SHORTCUT_NAME%"
+set "SHORTCUT_STARTUP=%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup\%SHORTCUT_NAME%"
+
+:: ==============================================
+:: Check Install
+:: ==============================================
+if exist "%TARGET_PATH%" goto UNINSTALL_FLOW
+
+:INSTALL_FLOW
+echo ----------------------------------------------
+echo SkyCleanUp Installer
+echo ----------------------------------------------
+echo.
+echo SkyCleanUpをインストールします。
+echo.
+pause
+echo.
+echo [1/3] Create Main Folder...
+if not exist "%TARGET_DIR%" mkdir "%TARGET_DIR%"
+
+echo [2/3] Creating Main File...
+:: Extract the bottom part of this batch (PAYLOAD) and save it in AppData.
+powershell -Command "$raw = Get-Content '%~f0' -Encoding UTF8; $skip = 0; foreach($i in 0..($raw.Length-1)){ if($raw[$i] -eq ':: --- PAYLOAD_START ---'){ $skip = $i + 1; break } }; $content = $raw[$skip..($raw.Length-1)] -join \"`r`n\"; [System.IO.File]::WriteAllLines('%TARGET_PATH%', $content)"
+
+echo [3/3] Creating Shortcut Files...
+:: Create Desktop Shortcut
+powershell -Command "$s=(New-Object -COM WScript.Shell).CreateShortcut('%SHORTCUT_DESKTOP%');$s.TargetPath='%TARGET_PATH%';$s.Save()"
+:: Create Startup Shortcut
+powershell -Command "$s=(New-Object -COM WScript.Shell).CreateShortcut('%SHORTCUT_STARTUP%');$s.TargetPath='%TARGET_PATH%';$s.Save()"
+
+echo.
+echo Install Completed.
+pause
+exit
+
+:UNINSTALL_FLOW
+echo ----------------------------------------------
+echo SkyCleanUp Uninstaller
+echo ----------------------------------------------
+echo.
+echo SkyCleanUpのアンインストーラーへようこそ。
+echo.
+set /p "choice=アンインストール（削除）しますか？ (y/n): "
+
+if /i not "%choice%"=="y" (
+    echo キャンセルしました。
+    pause
+    exit
+)
+
+echo.
+echo [1/2] Remove Shortcut...
+if exist "%SHORTCUT_DESKTOP%" del /f /q "%SHORTCUT_DESKTOP%"
+if exist "%SHORTCUT_STARTUP%" del /f /q "%SHORTCUT_STARTUP%"
+
+echo [2/2] Delete Main Files...
+:: Delete the main file and then delete the folder itself.
+if exist "%TARGET_PATH%" del /f /q "%TARGET_PATH%"
+rd /s /q "%TARGET_DIR%" 2>nul
+
+echo.
+echo Delete Complete
+pause
+exit
+
+:: --- PAYLOAD_START ---
+@echo off
 echo This is SkyCleanUp Process. As long as it's open, the process will continue to run.
 echo.
 echo ===========================
